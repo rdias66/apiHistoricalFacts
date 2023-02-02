@@ -7,7 +7,7 @@ const searchFact = (year, factsArray) => {
 }
 
 const validateYearInput = year => {
-    let validation = 1920<year<2020 ? true : false;
+    const validation = 1920<year<2020 ? true : false;
     return validation;
 }
 export {searchFact, validateYearInput}
