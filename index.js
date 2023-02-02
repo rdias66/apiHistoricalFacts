@@ -1,6 +1,6 @@
 //npm init
 //npm install express
-import facts from './data/data_collection.js';
+import facts from './data_collection.js';
 import {searchFact, validateYearInput} from './service.js';
 
 const express = require('./express');
