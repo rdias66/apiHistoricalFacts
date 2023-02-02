@@ -1,12 +1,9 @@
 const searchFact = (year, factsArray) => {
-    if(validateYearInput(year)){
         return factsArray.filter((fact) => {
             if(fact.ano === year.toString()){
                 return fact;
             }
         });
-    }
-    return {'Erro': 'Ano inválido informado'};
 }
 
 const validateYearInput = year => {
