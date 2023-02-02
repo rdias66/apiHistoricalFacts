@@ -8,7 +8,7 @@ const app = express();
 const port = 8080;
 
 app.get('/', (req, res) => {
-    let year = req.query.ano;
+    const year = req.query.ano;
     if(validateYearInput(year)){
         res.status(200).json(searchFact(year, facts));
     }
@@ -16,6 +16,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-    let date = new Date();
+    const date = new Date();
     console.log("Server initiated at port" + port + "on" + date);
 });
