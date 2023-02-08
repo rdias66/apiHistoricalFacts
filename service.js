@@ -12,7 +12,6 @@ const findFactPos = (year, factsArray) => {
                 return i;
                 }
         }
-
 }
 
 const validateYearInput = year => {
