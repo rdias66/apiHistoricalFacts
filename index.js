@@ -1,41 +1,55 @@
-//npm init
-//npm install express
+import express from 'express';
 import facts from './data_collection.js';
-import {searchFact, validateYearInput, findFactPos} from './service.js';
+import { searchFact, validateYearInput, findFactPos } from './service.js';
 
-const express = require('./express');
 const app = express();
 const port = 8080;
 
 app.get('/', (req, res) => {
-    const year = req.query.ano;
-    if(validateYearInput(year)){
-        res.status(200).json(searchFact(year, facts));
+  const year = req.query.ano;
+  if (validateYearInput(year)) {
+    const result = searchFact(year, facts);
+    if (result) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).json({ Error: 'Fact not found for the specified year' });
     }
-    res.status(400).json({'Erro' : "Ano informado inválido"});
+  } else {
+    res.status(400).json({ Error: 'Invalid year provided' });
+  }
 });
 
 app.post('/', (req, res) => {
-    const newFactYear = req.query.ano;
-    if(!validateYearInput(newFactYear)){
-        const newFact = {Ano: newFactYear , Fato: req.query.fato }  
-        facts.push(newFact);
-        res.status(200);
+  const newFactYear = req.query.ano;
+  if (validateYearInput(newFactYear)) {
+    const existingFact = searchFact(newFactYear, facts);
+    if (!existingFact) {
+      const newFact = { Ano: newFactYear, Fato: req.query.fato };
+      facts.push(newFact);
+      res.status(200).json({ Message: 'Fact added successfully' });
+    } else {
+      res.status(409).json({ Error: 'Fact already exists for the specified year' });
     }
-    res.status(400).send("Fato ja existe no ano informado");
-
+  } else {
+    res.status(400).json({ Error: 'Invalid year provided' });
+  }
 });
 
 app.delete('/', (req, res) => {
-    const yearToDelete = req.query.ano;
-    if(validateYearInput(year)){
-        facts.splice(findFactPos(year), 1);
-        res.status(200).send("Fato do ano" + year + "deletado");
+  const yearToDelete = req.query.ano;
+  if (validateYearInput(yearToDelete)) {
+    const factPos = findFactPos(yearToDelete, facts);
+    if (factPos >= 0) {
+      facts.splice(factPos, 1);
+      res.status(200).json({ Message: `Fact for year ${yearToDelete} deleted` });
+    } else {
+      res.status(404).json({ Error: 'Fact not found for the specified year' });
     }
-    res.status(400).send("Ano informado invalido");
+  } else {
+    res.status(400).json({ Error: 'Invalid year provided' });
+  }
 });
 
 app.listen(port, () => {
-    const date = new Date();
-    console.log("Server initiated at port" + port + "on" + date);
+  console.log(`Server started on port ${port}`);
 });
